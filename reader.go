@@ -163,31 +163,8 @@ func (arr *Reader) Next() (*Header, error) {
 		return arr.Next()
 	}
 
-	// Parse and store the symbol table.
-	if header.Name == "/" { // GNU symbol table.
-		err = arr.parseGNUSymbols(header)
-		if err != nil {
-			return nil, err
-		}
-
-		return arr.Next()
-	}
-
-	if header.Name == "__.SYMDEF" { // BSD symbol table.
-		err = arr.parseBSDSymbols(header)
-		if err != nil {
-			return nil, err
-		}
-
-		return arr.Next()
-	}
-
-	if header.Name == "__.PKGDEF" { // Go specific symbol table.
-		err = arr.parseGoSymbols(header)
-		if err != nil {
-			return nil, err
-		}
-
+	// Skip symbols table.
+	if header.Name == "/" || header.Name == "__.SYMDEF" || header.Name == "__.PKGDEF" {
 		return arr.Next()
 	}
 
@@ -274,20 +251,5 @@ func (arr *Reader) parseStringsTable(header *Header) error {
 		name = append(name, c)
 	}
 
-	return nil
-}
-
-// parseGNUSymbols gets the GNU symbol table.
-func (arr *Reader) parseGNUSymbols(header *Header) error {
-	return nil
-}
-
-// parseBSDSymbols gets the BSD symbol table.
-func (arr *Reader) parseBSDSymbols(header *Header) error {
-	return nil
-}
-
-// parseGoSymbols gets the Go symbol table.
-func (arr *Reader) parseGoSymbols(header *Header) error {
 	return nil
 }

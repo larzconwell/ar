@@ -21,7 +21,7 @@ func FileInfoHeader(info os.FileInfo) *Header {
 	header := &Header{
 		Name:    info.Name(),
 		ModTime: info.ModTime(),
-		Mode:    int64(info.Mode().Perm()),
+		Mode:    int64(info.Mode()),
 		Size:    info.Size(),
 	}
 

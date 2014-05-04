@@ -67,6 +67,24 @@ func TestGNUVerify(t *testing.T) {
 	}
 }
 
+func TestGNUInvalidStrings(t *testing.T) {
+	in, err := os.Open(filepath.Join("testdata", "gnu_invalid_strings.a"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer in.Close()
+	arReader := NewReader(in)
+
+	_, err = arReader.Next()
+	if err != nil && err != ErrStringsEntry {
+		t.Fatal(err)
+	}
+
+	if err == nil {
+		t.Error("Next should have returned ErrHeader but didn't.")
+	}
+}
+
 func TestInvalidSize(t *testing.T) {
 	in, err := os.Open(filepath.Join("testdata", "invalid_size.a"))
 	if err != nil {

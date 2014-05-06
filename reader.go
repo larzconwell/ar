@@ -6,6 +6,7 @@ import (
 	"io"
 	"io/ioutil"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -133,7 +134,7 @@ func (arr *Reader) Next() (*Header, error) {
 			return nil, err
 		}
 
-		header.Name = string(name)
+		header.Name = arr.trimPad(name)
 	}
 
 	if extendedFormat == "gnu" {
@@ -164,7 +165,8 @@ func (arr *Reader) Next() (*Header, error) {
 	}
 
 	// Skip symbols table.
-	if header.Name == "/" || header.Name == "__.SYMDEF" || header.Name == "__.PKGDEF" {
+	if header.Name == "/" || strings.Contains(header.Name, "__.SYMDEF") ||
+		header.Name == "__.PKGDEF" {
 		return arr.Next()
 	}
 
@@ -227,7 +229,7 @@ func (arr *Reader) readMagic() error {
 
 // trimPad trims field padding.
 func (arr *Reader) trimPad(field []byte) string {
-	return string(bytes.TrimRight(field, " "))
+	return string(bytes.TrimRight(field, " \u0000"))
 }
 
 // parseStringsTable gets the GNU strings table from a file entry.

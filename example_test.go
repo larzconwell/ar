@@ -7,39 +7,39 @@ import (
 )
 
 func ExampleWriter() {
-  out, err := os.Create("libz.a")
-  if err != nil {
-    panic(err)
-  }
-  defer out.Close()
-  arWriter := ar.NewWriter(out)
+	out, err := os.Create("libz.a")
+	if err != nil {
+		panic(err)
+	}
+	defer out.Close()
+	arWriter := ar.NewWriter(out)
 
-  object, err := os.Open("hasher.o")
-  if err != nil {
-    panic(err)
-  }
-  defer object.Close()
+	object, err := os.Open("hasher.o")
+	if err != nil {
+		panic(err)
+	}
+	defer object.Close()
 
-  stat, err := object.Stat()
-  if err != nil {
-    panic(err)
-  }
+	stat, err := object.Stat()
+	if err != nil {
+		panic(err)
+	}
 
-  header := ar.FileInfoHeader(stat)
-  err = arWriter.WriteHeader(header)
-  if err != nil {
-    panic(err)
-  }
+	header := ar.FileInfoHeader(stat)
+	err = arWriter.WriteHeader(header)
+	if err != nil {
+		panic(err)
+	}
 
-  _, err = io.Copy(arWriter, object)
-  if err != nil {
-    panic(err)
-  }
+	_, err = io.Copy(arWriter, object)
+	if err != nil {
+		panic(err)
+	}
 
-  err = arWriter.Close()
-  if err != nil {
-    panic(err)
-  }
+	err = arWriter.Close()
+	if err != nil {
+		panic(err)
+	}
 }
 
 func ExampleReader() {

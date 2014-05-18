@@ -14,10 +14,10 @@ var (
 )
 
 func init() {
-  err := os.MkdirAll(filepath.Join("testdata", "out"), os.ModePerm|os.ModeDir)
-  if err != nil {
-    panic(err)
-  }
+	err := os.MkdirAll(filepath.Join("testdata", "out"), os.ModePerm|os.ModeDir)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func TestGNURead(t *testing.T) {

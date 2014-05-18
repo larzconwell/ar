@@ -166,7 +166,7 @@ func (arr *Reader) Next() (*Header, error) {
 
 	// Skip symbols table.
 	if header.Name == "/" || strings.Contains(header.Name, "__.SYMDEF") ||
-		header.Name == "__.PKGDEF" {
+		header.Name == "__.PKGDEF" || header.Name == "__.GOSYMDEF" {
 		return arr.Next()
 	}
 

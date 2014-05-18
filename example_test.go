@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func Example() {
+func ExampleReader() {
 	in, err := os.Open("libz.a")
 	if err != nil {
 		panic(err)

@@ -45,6 +45,28 @@ func NewWriter(w io.Writer) *Writer {
 	}
 }
 
+// WriteHeader creates a new file entry for header. Calling after it's closed
+// will return ErrWriteAfterClose. ErrHeaderTooLong is returned if the header
+// won't fit.
+func (arw *Writer) WriteHeader(header *Header) error {
+	if arw.closed {
+		return ErrWriteAfterClose
+	}
+
+	err := arw.fillUnwritten(arw.buf)
+	if err != nil {
+		return err
+	}
+
+	hdr, err := arw.createHeader(true, header)
+	if err != nil {
+		return err
+	}
+
+	_, err = arw.buf.Write(hdr)
+	return err
+}
+
 // Write writes b to the current file entry. It returns ErrWriteTooLong if more
 // bytes are being written than the header allows.
 func (arw *Writer) Write(b []byte) (int, error) {
@@ -66,28 +88,6 @@ func (arw *Writer) Write(b []byte) (int, error) {
 	}
 
 	return n, err
-}
-
-// WriteHeader creates a new file entry for header. Calling after it's closed
-// will return ErrWriteAfterClose. ErrHeaderTooLong is returned if the header
-// won't fit.
-func (arw *Writer) WriteHeader(header *Header) error {
-	if arw.closed {
-		return ErrWriteAfterClose
-	}
-
-	err := arw.fillUnwritten(arw.buf)
-	if err != nil {
-		return err
-	}
-
-	hdr, err := arw.createHeader(true, header)
-	if err != nil {
-		return err
-	}
-
-	_, err = arw.buf.Write(hdr)
-	return err
 }
 
 // Close closes the ar archive creating the symbol/string tables. All writing

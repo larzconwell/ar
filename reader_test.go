@@ -13,6 +13,13 @@ var (
 	bsdHeader *Header
 )
 
+func init() {
+  err := os.MkdirAll(filepath.Join("testdata", "out"), os.ModePerm|os.ModeDir)
+  if err != nil {
+    panic(err)
+  }
+}
+
 func TestGNURead(t *testing.T) {
 	in, err := os.Open(filepath.Join("testdata", "gnu_test.a"))
 	if err != nil {
@@ -35,7 +42,7 @@ func TestGNURead(t *testing.T) {
 		t.Error("Header name isn't what it should be.")
 	}
 
-	out, err := os.OpenFile(filepath.Join("testdata", "gnu_"+header.Name),
+	out, err := os.OpenFile(filepath.Join("testdata", "out", "gnu_"+header.Name),
 		os.O_WRONLY|os.O_CREATE|os.O_TRUNC, os.FileMode(header.Mode))
 	if err != nil {
 		t.Fatal(err)
@@ -58,7 +65,7 @@ func TestGNURead(t *testing.T) {
 }
 
 func TestGNUVerify(t *testing.T) {
-	info, err := os.Stat(filepath.Join("testdata", "gnu_exit.o"))
+	info, err := os.Stat(filepath.Join("testdata", "out", "gnu_exit.o"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -108,7 +115,7 @@ func TestBSDRead(t *testing.T) {
 		t.Error("Header name isn't what it should be.")
 	}
 
-	out, err := os.OpenFile(filepath.Join("testdata", "bsd_"+header.Name),
+	out, err := os.OpenFile(filepath.Join("testdata", "out", "bsd_"+header.Name),
 		os.O_WRONLY|os.O_CREATE|os.O_TRUNC, os.FileMode(header.Mode))
 	if err != nil {
 		t.Fatal(err)
@@ -131,7 +138,7 @@ func TestBSDRead(t *testing.T) {
 }
 
 func TestBSDVerify(t *testing.T) {
-	info, err := os.Stat(filepath.Join("testdata", "bsd_exit.o"))
+	info, err := os.Stat(filepath.Join("testdata", "out", "bsd_exit.o"))
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -168,7 +175,7 @@ func TestInvalidSize(t *testing.T) {
 }
 
 func TestInvalidFormat(t *testing.T) {
-	in, err := os.Open(filepath.Join("testdata", "gnu_exit.o"))
+	in, err := os.Open(filepath.Join("testdata", "out", "gnu_exit.o"))
 	if err != nil {
 		t.Fatal(err)
 	}

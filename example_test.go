@@ -36,7 +36,7 @@ func ExampleWriter() {
     panic(err)
   }
 
-  err = writer.Close()
+  err = arWriter.Close()
   if err != nil {
     panic(err)
   }

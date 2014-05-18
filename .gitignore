@@ -1,2 +1,2 @@
 *.test
-testdata/*.o
+testdata/out

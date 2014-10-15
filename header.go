@@ -2,6 +2,7 @@ package ar
 
 import (
 	"os"
+	"path"
 	"time"
 )
 
@@ -16,7 +17,10 @@ type Header struct {
 	Size    int64     // Length in bytes.
 }
 
-// FileInfoHeader creates a populated Header from info.
+// FileInfoHeader creates a populated Header from info. Because os.FileInfo's
+// Name method returns only the base name of the file it describes, it may be
+// necessary to modify the Name field of the returned header to provide the
+// full path name of the file.
 func FileInfoHeader(info os.FileInfo) *Header {
 	header := &Header{
 		Name:    info.Name(),
@@ -39,7 +43,7 @@ type fileInfoHeader struct {
 	header *Header
 }
 
-func (fi *fileInfoHeader) Name() string       { return fi.header.Name }
+func (fi *fileInfoHeader) Name() string       { return path.Base(fi.header.Name) }
 func (fi *fileInfoHeader) Size() int64        { return fi.header.Size }
 func (fi *fileInfoHeader) ModTime() time.Time { return fi.header.ModTime }
 func (fi *fileInfoHeader) IsDir() bool        { return fi.Mode().IsDir() }

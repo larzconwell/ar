@@ -2,6 +2,7 @@ package ar
 
 import (
 	"os"
+	"path"
 	"testing"
 	"time"
 )
@@ -33,14 +34,14 @@ func TestFileInfoHeader(t *testing.T) {
 func TestFileInfo(t *testing.T) {
 	now := time.Now()
 	header := &Header{
-		Name:    "test.o",
+		Name:    "testdata/test.o",
 		ModTime: now,
 		Mode:    int64(os.ModePerm | os.ModeDir),
 		Size:    5,
 	}
 	info := header.FileInfo()
 
-	if info.Name() != header.Name {
+	if info.Name() != path.Base(header.Name) {
 		t.Error("Info name doesn't match header.")
 	}
 
